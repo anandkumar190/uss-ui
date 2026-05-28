@@ -6,47 +6,53 @@
 
 @layer base {
   :root {
-    --background: #f8f7f4;
-    --foreground: #1f2937;
+  --font-display: "Plus Jakarta Sans";
+    --font-body: "Plus Jakarta Sans";
+    --font-mono: "monospace";
 
-    --card: #843f3f;
-    --card-foreground: #1f2937;
+    /* ✅ Correct oklch values matching old design */
+    --background: 0.972 0.008 85;
+    --foreground: 0.13 0.02 264;
 
-    --primary: #8b5e3c;
-    --primary-foreground: #ffffff;
+    --card: 1 0 0;                    /* white card bg */
+    --card-foreground: 0.13 0.02 264;
 
-    --secondary: #ece8df;
-    --secondary-foreground: #1f2937;
+    --primary: 0.58 0.09 55;          /* gold/brown #8b5e3c */
+    --primary-foreground: 1 0 0;      /* white text on primary */
 
-    --muted: #f1efe9;
-    --muted-foreground: #6b7280;
+    --secondary: 0.93 0.01 85;
+    --secondary-foreground: 0.13 0.02 264;
 
-    --border: #e5e7eb;
-    --input: #e5e7eb;
-    --ring: #8b5e3c;
+    --muted: 0.95 0.008 85;
+    --muted-foreground: 0.52 0.01 264;
+
+    --border: 0.91 0.005 264;
+    --input: 0.91 0.005 264;
+    --ring: 0.58 0.09 55;
 
     --radius: 0px;
+
   }
 
   .dark {
-    --background: #111827;
-    --foreground: #f9fafb;
+    --background: 0.13 0.02 264;
+    --foreground: 0.98 0.005 264;
 
-    --card: #1f2937;
-    --card-foreground: #f9fafb;
+    --card: 0.2 0.02 264;
+    --card-foreground: 0.98 0.005 264;
 
-    --primary: #c08a5b;
-    --primary-foreground: #111827;
+    --primary: 0.68 0.09 55;
+    --primary-foreground: 0.13 0.02 264;
 
-    --secondary: #374151;
-    --secondary-foreground: #f9fafb;
+    --secondary: 0.28 0.02 264;
+    --secondary-foreground: 0.98 0.005 264;
 
-    --muted: #374151;
-    --muted-foreground: #9ca3af;
+    --muted: 0.28 0.02 264;
+    --muted-foreground: 0.65 0.01 264;
 
-    --border: #374151;
-    --input: #374151;
-    --ring: #c08a5b;
+    --border: 0.28 0.02 264;
+    --input: 0.28 0.02 264;
+    --ring: 0.68 0.09 55;
   }
 
   * {
@@ -64,39 +70,66 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
-}
-
-@layer utilities {
-  .transition-smooth {
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  }
 
   .text-display-xl {
     @apply text-5xl md:text-7xl font-bold tracking-tight leading-none;
   }
 
+}
+@layer utilities {
+
+  .text-display-xl {
+    font-size: 3rem;        /* text-5xl */
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1;
+  }
+
   .text-display-lg {
-    @apply text-4xl md:text-6xl font-bold tracking-tight;
+    font-size: 2.25rem;     /* text-4xl */
+    font-weight: 700;
+    letter-spacing: -0.025em;
   }
 
   .text-display-md {
-    @apply text-3xl md:text-4xl font-bold tracking-tight;
+    font-size: 1.875rem;    /* text-3xl */
+    font-weight: 700;
+    letter-spacing: -0.025em;
   }
 
   .text-display-sm {
-    @apply text-2xl md:text-3xl font-semibold tracking-tight;
+    font-size: 1.5rem;      /* text-2xl */
+    font-weight: 600;
+    letter-spacing: -0.025em;
   }
 
   .text-body-lg {
-    @apply text-lg leading-relaxed;
+    font-size: 1.125rem;    /* text-lg */
+    line-height: 1.625;
   }
 
   .text-body-base {
-    @apply text-base leading-normal;
+    font-size: 1rem;
+    line-height: 1.5;
   }
 
   .text-label {
-    @apply text-xs font-semibold uppercase tracking-[0.18em];
+    font-size: 0.75rem;     /* text-xs */
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+
+  /* Responsive overrides */
+  @media (min-width: 768px) {
+    .text-display-xl { font-size: 4.5rem; }   /* md:text-7xl */
+    .text-display-lg { font-size: 3.75rem; }  /* md:text-6xl */
+    .text-display-md { font-size: 2.25rem; }  /* md:text-4xl */
+    .text-display-sm { font-size: 1.875rem; } /* md:text-3xl */
+  }
+
+  .transition-smooth {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .box-light-shadow {
@@ -107,27 +140,14 @@
     box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
   }
 
-
   @keyframes fade-up {
-    from {
-      opacity: 0;
-      transform: translateY(24px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
   @keyframes fade-in {
-    from {
-      opacity: 0;
-    }
-
-    to {
-      opacity: 1;
-    }
+    from { opacity: 0; }
+    to   { opacity: 1; }
   }
 
   .animate-fade-up {
