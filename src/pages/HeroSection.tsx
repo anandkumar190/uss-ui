@@ -20,7 +20,7 @@ export function HeroSection() {
       <div className="relative z-10 flex flex-col justify-end pb-20 px-8 md:px-12 max-w-screen-2xl mx-auto w-full h-full">
         <div className="max-w-3xl space-y-6">
           <p
-            className="text-label text-card/60 animate-fade-up tracking-[0.3em]"
+            className="text-label text-card/60 text-black animate-fade-up tracking-[0.3em]"
             style={{ animationDelay: "200ms" }}
           >
             INTERIOR DESIGN &amp; EXECUTION
@@ -34,7 +34,7 @@ export function HeroSection() {
             <span className="text-primary">Environments.</span>
           </h1>
           <p
-            className="text-body-lg text-card/70 max-w-lg animate-fade-up"
+            className="text-body-lg  text-white text-card/70 max-w-lg animate-fade-up"
             style={{ animationDelay: "500ms" }}
           >
             We engineer environments that reflect the identity and ambition of

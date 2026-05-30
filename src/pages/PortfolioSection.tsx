@@ -5,7 +5,7 @@ const PROJECTS: Project[] = [
   {
     id: "baker-by-chance",
     title: "Baker By Chance",
-    category: "Retail",
+    category: "Industrial",
     year: "2024",
     location: "Commercial",
     description:
@@ -16,7 +16,7 @@ const PROJECTS: Project[] = [
   {
     id: "red-chief-akbarpur",
     title: "Red Chief, Akbarpur",
-    category: "Retail",
+    category: "Industrial",
     year: "2024",
     location: "U.P.",
     description:
@@ -27,9 +27,9 @@ const PROJECTS: Project[] = [
   {
     id: "bella-steps",
     title: "Bella Steps",
-    category: "Retail",
+    category: "Industrial",
     year: "2023",
-    location: "Retail",
+    location: "Industrial",
     description:
       "Full design and execution, project incharge from inception to completion.",
     imageUrl:
@@ -38,18 +38,18 @@ const PROJECTS: Project[] = [
   {
     id: "axis-bank",
     title: "Axis Bank",
-    category: "Banking",
+    category: "Commercial",
     year: "2023",
-    location: "Banking Infrastructure",
+    location: "Commercial Infrastructure",
     description:
-      "High-impact banking infrastructure, full project lifecycle: design development, BOQ optimization, on-site leadership.",
+      "High-impact Commercial infrastructure, full project lifecycle: design development, BOQ optimization, on-site leadership.",
     imageUrl:
       "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80",
   },
   {
     id: "yes-bank",
     title: "Yes Bank — GMS Road, Dehradun",
-    category: "Banking",
+    category: "Commercial",
     year: "2023",
     location: "Dehradun",
     description:
@@ -60,7 +60,7 @@ const PROJECTS: Project[] = [
   {
     id: "bajaj-finserv",
     title: "Bajaj Finserv, Moonak",
-    category: "Banking",
+    category: "Commercial",
     year: "2022",
     location: "Punjab",
     description: "End-to-end execution and on-site management.",
@@ -70,7 +70,7 @@ const PROJECTS: Project[] = [
   {
     id: "crocs-outlets",
     title: "Crocs — Multi-City Rollout",
-    category: "Retail",
+    category: "Industrial",
     year: "2023",
     location: "Ranchi, Patna, Delhi, Kochi",
     description:
@@ -81,9 +81,9 @@ const PROJECTS: Project[] = [
   {
     id: "tupperware-kiosk",
     title: "Tupperware Kiosk",
-    category: "Retail",
+    category: "Industrial",
     year: "2022",
-    location: "Retail",
+    location: "Industrial",
     description: "Complete kiosk fit-out, designer and project head.",
     imageUrl:
       "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800&q=80",
@@ -91,7 +91,7 @@ const PROJECTS: Project[] = [
   {
     id: "timex-lulu-mall",
     title: "Just Watches (Timex) — Lulu Mall Kochi",
-    category: "Retail",
+    category: "Industrial",
     year: "2022",
     location: "Kochi",
     description: "Complete fit-out, designer and project head.",
@@ -100,8 +100,8 @@ const PROJECTS: Project[] = [
   },
   {
     id: "mix-clients",
-    title: "Mix Clients — Corporate & Retail",
-    category: "Corporate",
+    title: "Mix Clients — Residential & Industrial",
+    category: "Residential",
     year: "2024",
     location: "Multiple Locations",
     description:
@@ -113,9 +113,9 @@ const PROJECTS: Project[] = [
 
 const CATEGORIES: ("All" | ProjectCategory)[] = [
   "All",
-  "Banking",
-  "Retail",
-  "Corporate",
+  "Commercial",
+  "Industrial",
+  "Residential",
 ];
 
 interface ProjectCardProps {

@@ -49,11 +49,11 @@ export function Navbar() {
           <button
             type="button"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className={`text-label tracking-[0.25em] transition-colors duration-300 ${
+            className={` text-label tracking-[0.25em] transition-colors duration-300   ${
               scrolled ? "text-foreground" : "text-card"
             }`}
           >
-            URBAN STYLE SPACE
+            <span className=" text-[24px] "> URBAN STYLE SPACE  </span>
           </button>
 
           {/* Desktop nav */}
