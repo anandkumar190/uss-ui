@@ -2,9 +2,9 @@ const FOOTER_NAV = ["About", "Services", "Process", "Portfolio", "Contact"];
 
 export function Footer() {
   const year = new Date().getFullYear();
-  const hostname = encodeURIComponent(
-    typeof window !== "undefined" ? window.location.hostname : "",
-  );
+  // const hostname = encodeURIComponent(
+  //   typeof window !== "undefined" ? window.location.hostname : "",
+  // );
 
   return (
     <footer
