@@ -2,7 +2,7 @@ export function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative h-screen min-h-[600px] flex flex-col overflow-hidden"
+      className="relative  h-svh h-screen min-h-[600px] flex flex-col overflow-hidden"
     >
       {/* Background image */}
       <div
@@ -17,7 +17,7 @@ export function HeroSection() {
       <div className="absolute inset-0 bg-foreground/55" aria-hidden="true" />
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col justify-end pb-20 px-8 md:px-12 max-w-screen-2xl mx-auto w-full h-full">
+      <div className="relative z-10 flex flex-col justify-end  pb-32 pb-20 px-8 md:px-12 max-w-screen-2xl mx-auto w-full h-full">
         <div className="max-w-3xl space-y-6">
           <p
             className="text-label text-card/60 text-black animate-fade-up tracking-[0.3em]"
