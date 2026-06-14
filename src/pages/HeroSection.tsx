@@ -13,6 +13,16 @@ export function HeroSection({ heroContent }: { heroContent?: any }) {
 
   const renderTitle = () => {
     return title.split("\n").map((line: string, index: number) => {
+      const pipeParts = line.split("|");
+      if (pipeParts.length > 1) {
+        return (
+          <span key={index}>
+            {index > 0 && <br />}
+            {pipeParts[0]}
+            <span className="text-primary">{pipeParts[1]}</span>
+          </span>
+        );
+      }
       const parts = line.split("Environments.");
       if (parts.length > 1) {
         return (

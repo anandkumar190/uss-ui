@@ -83,20 +83,26 @@ export function useSEO(pagePath: string = "/") {
               ? seo.favicon
               : `${API_BASE_URL}${seo.favicon}`;
             
-            // Standard favicon link
-            let faviconLink = document.querySelector("link[rel='icon']");
-            if (!faviconLink) {
-              faviconLink = document.createElement("link");
-              faviconLink.setAttribute("rel", "icon");
-              document.head.appendChild(faviconLink);
+            // Determine MIME type based on file extension
+            let mimeType = "image/x-icon";
+            if (absoluteFavicon.endsWith(".png")) {
+              mimeType = "image/png";
+            } else if (absoluteFavicon.endsWith(".svg")) {
+              mimeType = "image/svg+xml";
+            } else if (absoluteFavicon.endsWith(".webp")) {
+              mimeType = "image/webp";
             }
-            faviconLink.setAttribute("href", absoluteFavicon);
 
-            // Also check for shortcut icon
-            let shortcutLink = document.querySelector("link[rel='shortcut icon']");
-            if (shortcutLink) {
-              shortcutLink.setAttribute("href", absoluteFavicon);
-            }
+            // Remove existing icon tags to force Chrome/Firefox to re-evaluate
+            const existingIcons = document.querySelectorAll("link[rel='icon'], link[rel='shortcut icon']");
+            existingIcons.forEach(el => el.parentNode?.removeChild(el));
+
+            // Create and append the new favicon link tag
+            const newIcon = document.createElement("link");
+            newIcon.setAttribute("rel", "icon");
+            newIcon.setAttribute("type", mimeType);
+            newIcon.setAttribute("href", `${absoluteFavicon}?v=${Date.now()}`);
+            document.head.appendChild(newIcon);
           }
         }
       } catch (err) {

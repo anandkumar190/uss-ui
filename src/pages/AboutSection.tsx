@@ -76,6 +76,16 @@ export function AboutSection({ aboutContent }: { aboutContent?: any }) {
 
   const renderTitle = () => {
     return title.split("\n").map((line: string, index: number) => {
+      const pipeParts = line.split("|");
+      if (pipeParts.length > 1) {
+        return (
+          <span key={index}>
+            {index > 0 && <br />}
+            {pipeParts[0]}
+            <span className="italic text-primary/80 font-light">{pipeParts[1]}</span>
+          </span>
+        );
+      }
       const parts = line.split("Driven by Craft.");
       if (parts.length > 1) {
         return (

@@ -18,6 +18,7 @@ export function ContactSection({ contactConfig }: { contactConfig?: any }) {
   const [form, setForm] = useState<ContactForm>(EMPTY_FORM);
   const [errors, setErrors] = useState<Partial<ContactForm>>({});
   const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   function validate(): boolean {
     const next: Partial<ContactForm> = {};
@@ -49,6 +50,7 @@ export function ContactSection({ contactConfig }: { contactConfig?: any }) {
         throw new Error(result.error || "Failed to submit inquiry");
       }
       toast.success("Message sent. We'll be in touch shortly.");
+      setSubmitted(true);
       setForm(EMPTY_FORM);
       setErrors({});
     } catch (err: any) {
@@ -140,132 +142,152 @@ export function ContactSection({ contactConfig }: { contactConfig?: any }) {
           </div>
         </div>
 
-        {/* Right: form */}
+        {/* Right: form / success card */}
         <div>
-          <form
-            data-ocid="contact-form"
-            onSubmit={handleSubmit}
-            noValidate
-            className="space-y-6"
-          >
-            {/* Name */}
-            <div className="space-y-2">
-              <label
-                htmlFor="contact-name"
-                className="text-label text-muted-foreground"
-              >
-                Full Name
-              </label>
-              <input
-                id="contact-name"
-                data-ocid="contact-name"
-                type="text"
-                value={form.name}
-                onChange={(e) =>
-                  setForm((p) => ({ ...p, name: e.target.value }))
-                }
-                onBlur={() => handleBlur("name")}
-                placeholder="Your Name"
-                aria-invalid={!!errors.name}
-                aria-describedby={
-                  errors.name ? "contact-name-error" : undefined
-                }
-                className="w-full bg-transparent border-b border-border py-3 text-body-base placeholder:text-muted-foreground/50 focus:outline-none focus-visible:outline-none focus-visible:border-foreground focus-visible:ring-1 focus-visible:ring-foreground/30 focus:border-foreground transition-colors duration-200"
-              />
-              {errors.name && (
-                <p
-                  id="contact-name-error"
-                  className="text-xs text-destructive"
-                  role="alert"
-                >
-                  {errors.name}
+          {submitted ? (
+            <div className="bg-card border border-border p-8 text-center space-y-6 animate-fade-in flex flex-col items-center justify-center min-h-[400px]">
+              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary text-3xl">
+                ✓
+              </div>
+              <div className="space-y-3">
+                <h3 className="font-display text-2xl font-bold text-foreground">Inquiry Received</h3>
+                <p className="text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
+                  Thank you for reaching out to Urban Style Space. Your message has been successfully sent. We will review your details and get back to you shortly.
                 </p>
-              )}
-            </div>
-
-            {/* Email */}
-            <div className="space-y-2">
-              <label
-                htmlFor="contact-email"
-                className="text-label text-muted-foreground"
-              >
-                Email Address
-              </label>
-              <input
-                id="contact-email"
-                data-ocid="contact-email"
-                type="email"
-                value={form.email}
-                onChange={(e) =>
-                  setForm((p) => ({ ...p, email: e.target.value }))
-                }
-                onBlur={() => handleBlur("email")}
-                placeholder="your@email.com"
-                aria-invalid={!!errors.email}
-                aria-describedby={
-                  errors.email ? "contact-email-error" : undefined
-                }
-                className="w-full bg-transparent border-b border-border py-3 text-body-base placeholder:text-muted-foreground/50 focus:outline-none focus-visible:outline-none focus-visible:border-foreground focus-visible:ring-1 focus-visible:ring-foreground/30 focus:border-foreground transition-colors duration-200"
-              />
-              {errors.email && (
-                <p
-                  id="contact-email-error"
-                  className="text-xs text-destructive"
-                  role="alert"
-                >
-                  {errors.email}
-                </p>
-              )}
-            </div>
-
-            {/* Message */}
-            <div className="space-y-2">
-              <label
-                htmlFor="contact-message"
-                className="text-label text-muted-foreground"
-              >
-                Your Message
-              </label>
-              <textarea
-                id="contact-message"
-                data-ocid="contact-message"
-                value={form.message}
-                onChange={(e) =>
-                  setForm((p) => ({ ...p, message: e.target.value }))
-                }
-                onBlur={() => handleBlur("message")}
-                placeholder="Tell us about your project — location, scale, timeline, and any inspiration..."
-                rows={5}
-                aria-invalid={!!errors.message}
-                aria-describedby={
-                  errors.message ? "contact-message-error" : undefined
-                }
-                className="w-full bg-transparent border-b border-border py-3 text-body-base placeholder:text-muted-foreground/50 focus:outline-none focus-visible:outline-none focus-visible:border-foreground focus-visible:ring-1 focus-visible:ring-foreground/30 focus:border-foreground transition-colors duration-200 resize-none"
-              />
-              {errors.message && (
-                <p
-                  id="contact-message-error"
-                  className="text-xs text-destructive"
-                  role="alert"
-                >
-                  {errors.message}
-                </p>
-              )}
-            </div>
-
-            {/* Submit */}
-            <div className="pt-4">
+              </div>
               <button
-                type="submit"
-                data-ocid="contact-submit"
-                disabled={submitting}
-                aria-disabled={submitting}
-                className="text-label bg-foreground text-card px-10 py-4 hover:bg-primary transition-all duration-300 tracking-[0.2em] disabled:opacity-50 disabled:cursor-not-allowed w-full md:w-auto"
+                onClick={() => setSubmitted(false)}
+                className="text-label bg-foreground text-card px-8 py-3.5 hover:bg-primary transition-all duration-300 tracking-[0.2em]"
               >
-                {submitting ? "SENDING..." : "SEND INQUIRY"}
+                SEND ANOTHER INQUIRY
               </button>
             </div>
-          </form>
+          ) : (
+            <form
+              data-ocid="contact-form"
+              onSubmit={handleSubmit}
+              noValidate
+              className="space-y-6"
+            >
+              {/* Name */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="contact-name"
+                  className="text-label text-muted-foreground"
+                >
+                  Full Name
+                </label>
+                <input
+                  id="contact-name"
+                  data-ocid="contact-name"
+                  type="text"
+                  value={form.name}
+                  onChange={(e) =>
+                    setForm((p) => ({ ...p, name: e.target.value }))
+                  }
+                  onBlur={() => handleBlur("name")}
+                  placeholder="Your Name"
+                  aria-invalid={!!errors.name}
+                  aria-describedby={
+                    errors.name ? "contact-name-error" : undefined
+                  }
+                  className="w-full bg-transparent border-b border-border py-3 text-body-base placeholder:text-muted-foreground/50 focus:outline-none focus-visible:outline-none focus-visible:border-foreground focus-visible:ring-1 focus-visible:ring-foreground/30 focus:border-foreground transition-colors duration-200"
+                />
+                {errors.name && (
+                  <p
+                    id="contact-name-error"
+                    className="text-xs text-red-600 font-medium mt-1"
+                    role="alert"
+                  >
+                    {errors.name}
+                  </p>
+                )}
+              </div>
+
+              {/* Email */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="contact-email"
+                  className="text-label text-muted-foreground"
+                >
+                  Email Address
+                </label>
+                <input
+                  id="contact-email"
+                  data-ocid="contact-email"
+                  type="email"
+                  value={form.email}
+                  onChange={(e) =>
+                    setForm((p) => ({ ...p, email: e.target.value }))
+                  }
+                  onBlur={() => handleBlur("email")}
+                  placeholder="your@email.com"
+                  aria-invalid={!!errors.email}
+                  aria-describedby={
+                    errors.email ? "contact-email-error" : undefined
+                  }
+                  className="w-full bg-transparent border-b border-border py-3 text-body-base placeholder:text-muted-foreground/50 focus:outline-none focus-visible:outline-none focus-visible:border-foreground focus-visible:ring-1 focus-visible:ring-foreground/30 focus:border-foreground transition-colors duration-200"
+                />
+                {errors.email && (
+                  <p
+                    id="contact-email-error"
+                    className="text-xs text-red-600 font-medium mt-1"
+                    role="alert"
+                  >
+                    {errors.email}
+                  </p>
+                )}
+              </div>
+
+              {/* Message */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="contact-message"
+                  className="text-label text-muted-foreground"
+                >
+                  Your Message
+                </label>
+                <textarea
+                  id="contact-message"
+                  data-ocid="contact-message"
+                  value={form.message}
+                  onChange={(e) =>
+                    setForm((p) => ({ ...p, message: e.target.value }))
+                  }
+                  onBlur={() => handleBlur("message")}
+                  placeholder="Tell us about your project — location, scale, timeline, and any inspiration..."
+                  rows={5}
+                  aria-invalid={!!errors.message}
+                  aria-describedby={
+                    errors.message ? "contact-message-error" : undefined
+                  }
+                  className="w-full bg-transparent border-b border-border py-3 text-body-base placeholder:text-muted-foreground/50 focus:outline-none focus-visible:outline-none focus-visible:border-foreground focus-visible:ring-1 focus-visible:ring-foreground/30 focus:border-foreground transition-colors duration-200 resize-none"
+                />
+                {errors.message && (
+                  <p
+                    id="contact-message-error"
+                    className="text-xs text-red-600 font-medium mt-1"
+                    role="alert"
+                  >
+                    {errors.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Submit */}
+              <div className="pt-4">
+                <button
+                  type="submit"
+                  data-ocid="contact-submit"
+                  disabled={submitting}
+                  aria-disabled={submitting}
+                  className="text-label bg-foreground text-card px-10 py-4 hover:bg-primary transition-all duration-300 tracking-[0.2em] disabled:opacity-50 disabled:cursor-not-allowed w-full md:w-auto"
+                >
+                  {submitting ? "SENDING..." : "SEND INQUIRY"}
+                </button>
+              </div>
+            </form>
+          )}
         </div>
       </div>
     </section>
