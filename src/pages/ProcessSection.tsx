@@ -38,7 +38,63 @@ const PHASES = [
   },
 ];
 
-export function ProcessSection() {
+interface ProcessSectionProps {
+  processList?: Array<{
+    phaseNumber: string;
+    phaseTitle: string;
+    phaseSubtitle: string;
+    steps: string[];
+  }>;
+}
+
+export function ProcessSection({ processList }: ProcessSectionProps) {
+  const phases = processList && processList.length > 0 
+    ? processList.map(p => ({
+        number: p.phaseNumber,
+        title: p.phaseTitle,
+        subtitle: p.phaseSubtitle,
+        steps: p.steps
+      }))
+    : [
+        {
+          number: "01",
+          title: "CONCEPT DESIGN",
+          subtitle: "The Vision Phase",
+          steps: [
+            "Client Briefing",
+            "Site Analysis",
+            "Design Workshop",
+            "Concept Studies",
+            "Budgetary Assistance",
+            "Conceptual Presentation",
+          ],
+        },
+        {
+          number: "02",
+          title: "DESIGN DEVELOPMENT",
+          subtitle: "The Technical Phase",
+          steps: [
+            "Preliminary Layouts",
+            "Execution Drawings",
+            "Package BOQ Preparation",
+            "Tendering & Comparisons",
+          ],
+        },
+        {
+          number: "03",
+          title: "EXECUTION",
+          subtitle: "The Delivery Phase",
+          steps: [
+            "Work Order Management",
+            "Project Kick-off",
+            "Stakeholder Reporting",
+            "Performance Monitoring",
+            "Deviation Management",
+            "Final Handover",
+          ],
+        },
+      ];
+
   return (
     <section
       id="process"
@@ -57,7 +113,7 @@ export function ProcessSection() {
 
         {/* Phase cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-border">
-          {PHASES.map((phase) => (
+          {phases.map((phase) => (
             <div
               key={phase.number}
               data-ocid={`process-phase-${phase.number}`}

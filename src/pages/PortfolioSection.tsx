@@ -1,5 +1,6 @@
 import type { Project, ProjectCategory } from "@/types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { API_BASE_URL } from "@/config";
 
 const PROJECTS: Project[] = [
   {
@@ -124,15 +125,19 @@ interface ProjectCardProps {
 }
 
 function ProjectCard({ project, index }: ProjectCardProps) {
+  const imageUrl = project.imageUrl.startsWith("/assets/") || project.imageUrl.startsWith("http")
+    ? project.imageUrl
+    : `${API_BASE_URL}${project.imageUrl}`;
+
   return (
     <article
-      data-ocid={`project-card-${project.id}`}
+      data-ocid={`project-card-${project.id || project.title}`}
       className="group animate-fade-up"
       style={{ animationDelay: `${index * 80}ms` }}
     >
       <div className="relative overflow-hidden aspect-[4/3] bg-muted">
         <img
-          src={project.imageUrl}
+          src={imageUrl}
           alt={project.title}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           loading="lazy"
@@ -161,14 +166,33 @@ function ProjectCard({ project, index }: ProjectCardProps) {
 }
 
 export function PortfolioSection() {
+  const [projects, setProjects] = useState<Project[]>(PROJECTS);
   const [activeCategory, setActiveCategory] = useState<"All" | ProjectCategory>(
     "All",
   );
 
+  useEffect(() => {
+    async function fetchProjects() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/public/projects`);
+        const result = await response.json();
+        if (result.success && result.data && result.data.length > 0) {
+          setProjects(result.data);
+        } else {
+          setProjects(PROJECTS);
+        }
+      } catch (err) {
+        console.error("Failed to fetch projects:", err);
+        setProjects(PROJECTS);
+      }
+    }
+    fetchProjects();
+  }, []);
+
   const filtered =
     activeCategory === "All"
-      ? PROJECTS
-      : PROJECTS.filter((p) => p.category === activeCategory);
+      ? projects
+      : projects.filter((p) => p.category === activeCategory);
 
   return (
     <section
@@ -211,8 +235,8 @@ export function PortfolioSection() {
 
         {/* Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {(filtered as any[])?.map((project, i) => (
-            <ProjectCard key={project.id} project={project} index={i} />
+          {filtered.map((project, i) => (
+            <ProjectCard key={project.id || project.title} project={project} index={i} />
           ))}
         </div>
 

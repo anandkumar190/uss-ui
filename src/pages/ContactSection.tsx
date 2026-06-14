@@ -1,10 +1,20 @@
 import type { ContactForm } from "@/types";
 import { useState } from "react";
 import { toast } from "sonner";
+import { API_BASE_URL } from "@/config";
 
 const EMPTY_FORM: ContactForm = { name: "", email: "", message: "" };
 
-export function ContactSection() {
+export function ContactSection({ contactConfig }: { contactConfig?: any }) {
+  const addressLine1 = contactConfig?.addressLine1 || "First Floor Room No-2, Kh no-167,";
+  const addressLine2 = contactConfig?.addressLine2 || "H NO-B-63/1, Kirti Vihar Colony,";
+  const addressLine3 = contactConfig?.addressLine3 || "Loni, Ghaziabad, U.P. - 201102";
+  const email = contactConfig?.email || "urbanstylespace@gmail.com";
+  const phone = contactConfig?.phone || "+91 6202592267";
+  const website = contactConfig?.website || "www.urbanstylespace.com";
+  const websiteUrl = contactConfig?.websiteUrl || "https://www.urbanstylespace.com";
+  const hours = contactConfig?.hours || "Mon – Sat, 9am – 7pm IST";
+
   const [form, setForm] = useState<ContactForm>(EMPTY_FORM);
   const [errors, setErrors] = useState<Partial<ContactForm>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -27,12 +37,22 @@ export function ContactSection() {
     if (!validate()) return;
     setSubmitting(true);
     try {
-      await new Promise((r) => setTimeout(r, 800));
+      const response = await fetch(`${API_BASE_URL}/api/public/inquiry`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(form)
+      });
+      const result = await response.json();
+      if (!result.success) {
+        throw new Error(result.error || "Failed to submit inquiry");
+      }
       toast.success("Message sent. We'll be in touch shortly.");
       setForm(EMPTY_FORM);
       setErrors({});
-    } catch {
-      toast.error("Something went wrong. Please try again.");
+    } catch (err: any) {
+      toast.error(err.message || "Something went wrong. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -79,43 +99,43 @@ export function ContactSection() {
             <div>
               <p className="text-label text-muted-foreground mb-1">Studio</p>
               <p className="text-body-base">
-                First Floor Room No-2, Kh no-167,
+                {addressLine1}
               </p>
-              <p className="text-body-base">H NO-B-63/1, Kirti Vihar Colony,</p>
-              <p className="text-body-base">Loni, Ghaziabad, U.P. - 201102</p>
+              <p className="text-body-base">{addressLine2}</p>
+              <p className="text-body-base">{addressLine3}</p>
             </div>
             <div>
               <p className="text-label text-muted-foreground mb-1">Email</p>
               <a
-                href="mailto:urbanstylespace@gmail.com"
+                href={`mailto:${email}`}
                 className="text-body-base hover:text-primary transition-colors duration-200"
               >
-                urbanstylespace@gmail.com
+                {email}
               </a>
             </div>
             <div>
               <p className="text-label text-muted-foreground mb-1">Phone</p>
               <a
-                href="tel:+916202592267"
+                href={`tel:${phone.replace(/\s+/g, '')}`}
                 className="text-body-base hover:text-primary transition-colors duration-200"
               >
-                +91 6202592267
+                {phone}
               </a>
             </div>
             <div>
               <p className="text-label text-muted-foreground mb-1">Website</p>
               <a
-                href="https://www.urbanstylespace.com"
+                href={websiteUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-body-base hover:text-primary transition-colors duration-200"
               >
-                www.urbanstylespace.com
+                {website}
               </a>
             </div>
             <div>
               <p className="text-label text-muted-foreground mb-1">Hours</p>
-              <p className="text-body-base">Mon – Sat, 9am – 7pm IST</p>
+              <p className="text-body-base">{hours}</p>
             </div>
           </div>
         </div>

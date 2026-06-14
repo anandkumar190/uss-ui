@@ -1,10 +1,14 @@
 const FOOTER_NAV = ["About", "Services", "Process", "Portfolio", "Contact"];
 
-export function Footer() {
+export function Footer({ footerContent, contactConfig }: { footerContent?: any, contactConfig?: any }) {
+  const title = footerContent?.title || "URBAN STYLE SPACE";
+  const description = footerContent?.description || "We engineer environments that reflect the identity and ambition of our clients.";
+  const address = contactConfig?.addressShort || "Kirti Vihar Colony, Loni\nGhaziabad, U.P. — India";
+  const email = contactConfig?.email || "urbanstylespace@gmail.com";
+  const phone = contactConfig?.phone || "+91 6202592267";
+  const website = contactConfig?.website || "www.urbanstylespace.com";
+  const websiteUrl = contactConfig?.websiteUrl || "https://www.urbanstylespace.com";
   const year = new Date().getFullYear();
-  // const hostname = encodeURIComponent(
-  //   typeof window !== "undefined" ? window.location.hostname : "",
-  // );
 
   return (
     <footer
@@ -16,11 +20,10 @@ export function Footer() {
         <div className="space-y-3">
           <p className="text-label text-card/40 tracking-[0.2em]">Studio</p>
           <p className="font-display text-xl font-bold tracking-tight">
-            URBAN STYLE SPACE
+            {title}
           </p>
           <p className="text-card/60 text-sm leading-relaxed max-w-xs">
-            We engineer environments that reflect the identity and ambition of
-            our clients.
+            {description}
           </p>
         </div>
 
@@ -49,30 +52,28 @@ export function Footer() {
         {/* Contact / Location */}
         <div className="space-y-3">
           <p className="text-label text-card/40 tracking-[0.2em]">Contact</p>
-          <address className="not-italic text-card/60 text-sm leading-relaxed">
-            Kirti Vihar Colony, Loni
-            <br />
-            Ghaziabad, U.P. — India
+          <address className="not-italic text-card/60 text-sm leading-relaxed whitespace-pre-line">
+            {address}
           </address>
           <a
-            href="mailto:urbanstylespace@gmail.com"
+            href={`mailto:${email}`}
             className="block text-card/60 text-sm hover:text-card transition-colors duration-200 mt-2"
           >
-            urbanstylespace@gmail.com
+            {email}
           </a>
           <a
-            href="tel:+916202592267"
+            href={`tel:${phone.replace(/\s+/g, '')}`}
             className="block text-card/60 text-sm hover:text-card transition-colors duration-200"
           >
-            +91 6202592267
+            {phone}
           </a>
           <a
-            href="https://www.urbanstylespace.com"
+            href={websiteUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="block text-card/60 text-sm hover:text-card transition-colors duration-200"
           >
-            www.urbanstylespace.com
+            {website}
           </a>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { API_BASE_URL } from "@/config";
 
 const STATS = [
   { value: "7+", label: "Years", sub: "Of Experience" },
@@ -32,17 +33,67 @@ const SLIDES = [
   },
 ];
 
-export function AboutSection() {
+export function AboutSection({ aboutContent }: { aboutContent?: any }) {
+  const stats = aboutContent?.stats && aboutContent.stats.length > 0 
+    ? aboutContent.stats 
+    : STATS;
+  
+  const slides = aboutContent?.slides && aboutContent.slides.length > 0 
+    ? aboutContent.slides 
+    : SLIDES;
+
+  const title = aboutContent?.title || "Built on Experience.\nDriven by Craft.";
+  const subtitle = aboutContent?.subtitle || "ABOUT US";
+  const introText = aboutContent?.introText || "A premier design & execution studio specialising in commercial and corporate environments.";
+  const narrative = aboutContent?.narrative || "Urban Style Space is a premier interior design and execution firm specializing in high-impact commercial and corporate environments. Led by founder Rajeev Kumar Ranjan, with over 7 years of specialized experience in banking infrastructure, retail, and large-scale corporate rollouts.";
+  const notableClients = aboutContent?.notableClients || "Axis Bank · Yes Bank · Bajaj Finserv · Sahayog Bank · Crocs · Red Chief · Samsonite · Timex · Tupperware · Samvardhana Motherson · Baker By Chance · Envision";
+  
+  const founderName = aboutContent?.founderName || "Rajeev Kumar Ranjan";
+  const founderRole = aboutContent?.founderRole || "Founder & Principal Designer";
+  const founderInitials = aboutContent?.founderInitials || "RR";
+  const founderBio = aboutContent?.founderBio || "Our foundation may be new, but it's backed by 7 years of deep experience. Expert in AutoCAD (2D & 3D), 3Ds Max visualization, BOQ preparation, project scheduling, and team management.";
+  const founderExpertise = aboutContent?.founderExpertise && aboutContent.founderExpertise.length > 0
+    ? aboutContent.founderExpertise
+    : EXPERTISE;
+  const founderImage = aboutContent?.founderImage || "";
+  const founderImageUrl = founderImage
+    ? (founderImage.startsWith("http") || founderImage.startsWith("/assets/")
+      ? founderImage
+      : `${API_BASE_URL}${founderImage}`)
+    : "";
+
   const [current, setCurrent] = useState(0);
   const [animating, setAnimating] = useState(false);
 
   const go = (dir: 1 | -1) => {
-    if (animating) return;
+    if (animating || slides.length <= 1) return;
     setAnimating(true);
     setTimeout(() => {
-      setCurrent((prev) => (prev + dir + SLIDES.length) % SLIDES.length);
+      setCurrent((prev) => (prev + dir + slides.length) % slides.length);
       setAnimating(false);
     }, 300);
+  };
+
+  const renderTitle = () => {
+    return title.split("\n").map((line: string, index: number) => {
+      const parts = line.split("Driven by Craft.");
+      if (parts.length > 1) {
+        return (
+          <span key={index}>
+            {index > 0 && <br />}
+            {parts[0]}
+            <span className="italic text-primary/80 font-light">Driven by Craft.</span>
+            {parts[1]}
+          </span>
+        );
+      }
+      return (
+        <span key={index}>
+          {index > 0 && <br />}
+          {line}
+        </span>
+      );
+    });
   };
 
   return (
@@ -57,16 +108,14 @@ export function AboutSection() {
           <div className="max-w-xl">
             <div className="flex items-center gap-3 mb-5">
               <span className="w-8 h-px bg-primary opacity-60" />
-              <p className="text-label text-primary tracking-[0.25em]">ABOUT US</p>
+              <p className="text-label text-primary tracking-[0.25em]">{subtitle}</p>
             </div>
             <h2 className="text-display-md leading-tight">
-              Built on Experience.
-              <br />
-              <span className="italic text-primary/80 font-light">Driven by Craft.</span>
+              {renderTitle()}
             </h2>
           </div>
           <p className="text-sm text-muted-foreground max-w-xs leading-relaxed md:text-right">
-            A premier design & execution studio specialising in commercial and corporate environments.
+            {introText}
           </p>
         </div>
 
@@ -77,11 +126,7 @@ export function AboutSection() {
           <div className="space-y-12">
             <div className="space-y-6">
               <p className="text-body-base text-muted-foreground leading-relaxed max-w-prose">
-                Urban Style Space is a premier interior design and execution
-                firm specializing in high-impact commercial and corporate
-                environments. Led by founder Rajeev Kumar Ranjan, with over 7
-                years of specialized experience in banking infrastructure,
-                retail, and large-scale corporate rollouts.
+                {narrative}
               </p>
 
               <div className="border-l-2 border-primary/40 pl-5 space-y-2">
@@ -89,16 +134,14 @@ export function AboutSection() {
                   Notable Clients
                 </p>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  Axis Bank · Yes Bank · Bajaj Finserv · Sahayog Bank · Crocs ·
-                  Red Chief · Samsonite · Timex · Tupperware · Samvardhana
-                  Motherson · Baker By Chance · Envision
+                  {notableClients}
                 </p>
               </div>
             </div>
 
             {/* Stats grid */}
             <div className="grid grid-cols-3 gap-px bg-border">
-              {STATS.map((stat) => (
+              {stats.map((stat: any) => (
                 <div
                   key={stat.label}
                   className="group bg-background p-6 text-center relative overflow-hidden transition-colors hover:bg-primary/5"
@@ -125,31 +168,38 @@ export function AboutSection() {
             <div className="relative aspect-[4/3] overflow-hidden bg-secondary group">
 
               {/* Slides */}
-              {SLIDES.map((slide, i) => (
-                <img
-                  key={slide.src}
-                  src={slide.src}
-                  alt={slide.alt}
-                  loading="lazy"
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
-                    i === current ? "opacity-100" : "opacity-0"
-                  } ${animating && i === current ? "scale-105" : "scale-100"} transition-all`}
-                />
-              ))}
+              {slides.map((slide: any, i: number) => {
+                const slideImageUrl = slide.src.startsWith("/assets/") || slide.src.startsWith("http")
+                  ? slide.src
+                  : `${API_BASE_URL}${slide.src}`;
+                return (
+                  <img
+                    key={i}
+                    src={slideImageUrl}
+                    alt={slide.alt}
+                    loading="lazy"
+                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+                      i === current ? "opacity-100" : "opacity-0"
+                    } ${animating && i === current ? "scale-105" : "scale-100"} transition-all`}
+                  />
+                );
+              })}
 
               {/* Gradient overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
 
               {/* Tag */}
-              <div className="absolute bottom-4 left-5">
-                <p className="text-xs text-white/70 tracking-[0.15em] uppercase">
-                  {SLIDES[current].tag}
-                </p>
-              </div>
+              {slides[current] && (
+                <div className="absolute bottom-4 left-5">
+                  <p className="text-xs text-white/70 tracking-[0.15em] uppercase">
+                    {slides[current].tag}
+                  </p>
+                </div>
+              )}
 
               {/* Dot indicators */}
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5">
-                {SLIDES.map((_, i) => (
+                {slides.map((_: any, i: number) => (
                   <button
                     key={i}
                     onClick={() => setCurrent(i)}
@@ -164,25 +214,29 @@ export function AboutSection() {
               {/* Slide counter */}
               <div className="absolute top-4 right-5">
                 <p className="text-xs text-white/50 font-mono tabular-nums">
-                  {String(current + 1).padStart(2, "0")} / {String(SLIDES.length).padStart(2, "0")}
+                  {String(current + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
                 </p>
               </div>
 
               {/* Arrow buttons — visible on hover */}
-              <button
-                onClick={() => go(-1)}
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center bg-black/30 hover:bg-black/60 text-white rounded-full opacity-0 group-hover:opacity-100 transition-all duration-200 backdrop-blur-sm"
-                aria-label="Previous slide"
-              >
-                <ChevronLeft size={18} />
-              </button>
-              <button
-                onClick={() => go(1)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center bg-black/30 hover:bg-black/60 text-white rounded-full opacity-0 group-hover:opacity-100 transition-all duration-200 backdrop-blur-sm"
-                aria-label="Next slide"
-              >
-                <ChevronRight size={18} />
-              </button>
+              {slides.length > 1 && (
+                <>
+                  <button
+                    onClick={() => go(-1)}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center bg-black/30 hover:bg-black/60 text-white rounded-full opacity-0 group-hover:opacity-100 transition-all duration-200 backdrop-blur-sm"
+                    aria-label="Previous slide"
+                  >
+                    <ChevronLeft size={18} />
+                  </button>
+                  <button
+                    onClick={() => go(1)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center bg-black/30 hover:bg-black/60 text-white rounded-full opacity-0 group-hover:opacity-100 transition-all duration-200 backdrop-blur-sm"
+                    aria-label="Next slide"
+                  >
+                    <ChevronRight size={18} />
+                  </button>
+                </>
+              )}
             </div>
 
             {/* Founder callout */}
@@ -190,24 +244,25 @@ export function AboutSection() {
               <p className="text-label text-primary tracking-[0.2em]">FOUNDER</p>
 
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <span className="text-sm font-semibold text-primary">RR</span>
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                  {founderImageUrl ? (
+                    <img src={founderImageUrl} alt={founderName} className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-sm font-semibold text-primary">{founderInitials}</span>
+                  )}
                 </div>
                 <div>
-                  <h3 className="font-display text-xl font-bold">Rajeev Kumar Ranjan</h3>
-                  <p className="text-xs text-muted-foreground mt-0.5">Founder & Principal Designer</p>
+                  <h3 className="font-display text-xl font-bold">{founderName}</h3>
+                  <p className="text-xs text-muted-foreground mt-0.5">{founderRole}</p>
                 </div>
               </div>
 
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Our foundation may be new, but it's backed by 7 years of deep
-                experience. Expert in AutoCAD (2D &amp; 3D), 3Ds Max
-                visualization, BOQ preparation, project scheduling, and team
-                management.
+                {founderBio}
               </p>
 
               <div className="flex flex-wrap gap-2 pt-1">
-                {EXPERTISE.map((skill) => (
+                {founderExpertise.map((skill: string) => (
                   <span
                     key={skill}
                     className="text-xs px-3 py-1 border border-border rounded-full text-muted-foreground hover:border-primary/40 hover:text-primary transition-colors"

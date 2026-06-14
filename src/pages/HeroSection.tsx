@@ -1,4 +1,38 @@
-export function HeroSection() {
+import { API_BASE_URL } from "@/config";
+
+export function HeroSection({ heroContent }: { heroContent?: any }) {
+  const subtitle = heroContent?.subtitle || "INTERIOR DESIGN & EXECUTION";
+  const title = heroContent?.title || "We Engineer\nEnvironments.";
+  const description = heroContent?.description || "We engineer environments that reflect the identity and ambition of our clients.";
+  const mediaUrl = heroContent?.mediaUrl || "/assets/generated/hero-residence.dim_1920x1080.jpg";
+  const ctaText = heroContent?.ctaText || "EXPLORE OUR WORK";
+
+  const imageUrl = mediaUrl.startsWith("/assets/") 
+    ? mediaUrl 
+    : (mediaUrl.startsWith("http") ? mediaUrl : `${API_BASE_URL}${mediaUrl}`);
+
+  const renderTitle = () => {
+    return title.split("\n").map((line: string, index: number) => {
+      const parts = line.split("Environments.");
+      if (parts.length > 1) {
+        return (
+          <span key={index}>
+            {index > 0 && <br />}
+            {parts[0]}
+            <span className="text-primary">Environments.</span>
+            {parts[1]}
+          </span>
+        );
+      }
+      return (
+        <span key={index}>
+          {index > 0 && <br />}
+          {line}
+        </span>
+      );
+    });
+  };
+
   return (
     <section
       id="hero"
@@ -8,8 +42,7 @@ export function HeroSection() {
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage:
-            "url('/assets/generated/hero-residence.dim_1920x1080.jpg')",
+          backgroundImage: `url('${imageUrl}')`,
         }}
         aria-hidden="true"
       />
@@ -23,22 +56,19 @@ export function HeroSection() {
             className="text-label text-card/60 text-black animate-fade-up tracking-[0.3em]"
             style={{ animationDelay: "200ms" }}
           >
-            INTERIOR DESIGN &amp; EXECUTION
+            {subtitle}
           </p>
           <h1
             className="text-display-xl text-card animate-fade-up"
             style={{ animationDelay: "350ms" }}
           >
-            We Engineer
-            <br />
-            <span className="text-primary">Environments.</span>
+            {renderTitle()}
           </h1>
           <p
             className="text-body-lg  text-white text-card/70 max-w-lg animate-fade-up"
             style={{ animationDelay: "500ms" }}
           >
-            We engineer environments that reflect the identity and ambition of
-            our clients.
+            {description}
           </p>
           <div
             className="pt-4 animate-fade-up"
@@ -54,7 +84,7 @@ export function HeroSection() {
               }
               className="text-label text-foreground bg-card px-8 py-4 hover:bg-primary hover:text-primary-foreground transition-all duration-300 tracking-[0.2em]"
             >
-              EXPLORE OUR WORK
+              {ctaText}
             </button>
           </div>
         </div>

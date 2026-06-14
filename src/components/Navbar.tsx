@@ -1,5 +1,6 @@
 import { useScrolledPast } from "@/hooks/useScrollPosition";
 import { useEffect, useRef, useState } from "react";
+import { API_BASE_URL } from "@/config";
 
 const NAV_LINKS = [
   { label: "About", href: "#about" },
@@ -14,10 +15,13 @@ function scrollTo(id: string) {
   if (el) el.scrollIntoView({ behavior: "smooth" });
 }
 
-export function Navbar() {
+export function Navbar({ seo }: { seo?: any }) {
   const scrolled = useScrolledPast(60);
   const [menuOpen, setMenuOpen] = useState(false);
   const overlayRef = useRef<HTMLDivElement>(null);
+
+  const brandName = seo?.brandName || "URBAN STYLE SPACE";
+  const logo = seo?.logo;
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -49,11 +53,18 @@ export function Navbar() {
           <button
             type="button"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className={` text-label tracking-[0.25em] transition-colors duration-300   ${
+            className={`flex items-center gap-3 text-label tracking-[0.25em] transition-colors duration-300   ${
               scrolled ? "text-foreground" : "text-card"
             }`}
           >
-            <span className=" text-[24px] "> URBAN STYLE SPACE  </span>
+            {logo ? (
+              <img 
+                src={logo.startsWith("http") ? logo : `${API_BASE_URL}${logo}`} 
+                alt={brandName} 
+                className="h-8 w-auto object-contain inline-block"
+              />
+            ) : null}
+            <span className=" text-[18px] md:text-[22px] font-bold uppercase "> {brandName} </span>
           </button>
 
           {/* Desktop nav */}

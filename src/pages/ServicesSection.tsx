@@ -11,7 +11,26 @@ const SERVICES = [
   "Modular / Customised Furniture",
 ];
 
-export function ServicesSection() {
+interface ServicesSectionProps {
+  servicesList?: Array<{ name: string }>;
+}
+
+export function ServicesSection({ servicesList }: ServicesSectionProps) {
+  const services = servicesList && servicesList.length > 0 
+    ? servicesList.map(s => s.name) 
+    : [
+        "Site Survey",
+        "Space Planning",
+        "Civil & Interior Work",
+        "Electrical Work",
+        "HVAC Work",
+        "Ceiling Work",
+        "Fire Alarm Systems",
+        "Networking & Server Racks",
+        "UPS & DG",
+        "Modular / Customised Furniture",
+      ];
+
   return (
     <section
       id="services"
@@ -33,7 +52,7 @@ export function ServicesSection() {
 
         {/* Services grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border">
-          {SERVICES.map((service, i) => (
+          {services.map((service, i) => (
             <div
               key={service}
               data-ocid={`service-card-${i}`}
