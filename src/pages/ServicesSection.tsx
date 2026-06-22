@@ -1,16 +1,3 @@
-const SERVICES = [
-  "Site Survey",
-  "Space Planning",
-  "Civil & Interior Work",
-  "Electrical Work",
-  "HVAC Work",
-  "Ceiling Work",
-  "Fire Alarm Systems",
-  "Networking & Server Racks",
-  "UPS & DG",
-  "Modular / Customised Furniture",
-];
-
 interface ServiceItem {
   name: string;
   description?: string;

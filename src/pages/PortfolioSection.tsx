@@ -125,24 +125,98 @@ interface ProjectCardProps {
 }
 
 function ProjectCard({ project, index }: ProjectCardProps) {
-  const imageUrl = project.imageUrl.startsWith("/assets/") || project.imageUrl.startsWith("http")
-    ? project.imageUrl
-    : `${API_BASE_URL}${project.imageUrl}`;
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+
+  // Get gallery list, fallback to single cover image
+  const gallery = project.imageUrls && project.imageUrls.length > 0
+    ? project.imageUrls
+    : [project.imageUrl];
+
+  useEffect(() => {
+    if (!isHovered || gallery.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setActiveIdx((prev) => (prev + 1) % gallery.length);
+    }, 1000); // Slide changes every 2 seconds on hover
+
+    return () => clearInterval(interval);
+  }, [isHovered, gallery.length]);
+
+  const currentImg = gallery[activeIdx] || "";
+  const imageUrl = currentImg.startsWith("/assets/") || currentImg.startsWith("http")
+    ? currentImg
+    : currentImg
+      ? `${API_BASE_URL}${currentImg}`
+      : "";
+
+  const handleNext = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setActiveIdx((prev) => (prev + 1) % gallery.length);
+  };
+
+  const handlePrev = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setActiveIdx((prev) => (prev - 1 + gallery.length) % gallery.length);
+  };
 
   return (
     <article
       data-ocid={`project-card-${project.id || project.title}`}
       className="group animate-fade-up"
       style={{ animationDelay: `${index * 80}ms` }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => {
+        setIsHovered(false);
+        setActiveIdx(0); // Reset to first image when hover ends
+      }}
     >
-      <div className="relative overflow-hidden aspect-[4/3] bg-muted">
+      <div className="relative overflow-hidden aspect-[4/3] bg-muted group/image">
         <img
           src={imageUrl}
           alt={project.title}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          className="w-full h-full object-cover transition-transform duration-75 group-hover:scale-102 select-none"
           loading="lazy"
         />
-        <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/20 transition-all duration-500" />
+        <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/10 transition-all duration-500" />
+
+        {gallery.length > 1 && (
+          <>
+            {/* Navigation Arrows */}
+            <button
+              onClick={handlePrev}
+              type="button"
+              className="absolute left-2.5 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white p-1.5 rounded-full transition duration-150 z-10 opacity-0 group-hover/image:opacity-100 cursor-pointer select-none"
+            >
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button
+              onClick={handleNext}
+              type="button"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white p-1.5 rounded-full transition duration-150 z-10 opacity-0 group-hover/image:opacity-100 cursor-pointer select-none"
+            >
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+
+            {/* Dots indicators */}
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10 bg-black/35 backdrop-blur-xs px-2.5 py-1 rounded-full">
+              {gallery.map((_, idx) => (
+                <span
+                  key={idx}
+                  className={`h-1.5 w-1.5 rounded-full transition-all duration-150 ${
+                    activeIdx === idx ? "bg-white scale-110" : "bg-white/45"
+                  }`}
+                />
+              ))}
+            </div>
+          </>
+        )}
       </div>
       <div className="pt-4 pb-6 space-y-1">
         <div className="flex items-center justify-between">
